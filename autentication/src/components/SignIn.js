@@ -1,4 +1,4 @@
-import { useContext, useReducer, useRef, useState } from "react";
+import { useContext, useEffect, useReducer, useRef, useState } from "react";
 import AccountContext from "../storage/dataBase";
 import Modal from "./Modal";
 import classes from "./SignIn.module.css"
@@ -7,16 +7,16 @@ import buttonClasses from "./Login.module.css"
 
 const ErrorMessage = (props) => {
     let message = ""
-    if(!props.validity && props.id === "name"){
+    if(props.id === "name"){
         message = "Chosen name is already taken!"
     }
-    if(!props.validity && props.id === "mail"){
+    if(props.id === "mail"){
         message = "Chosen e-mail is already taken!"
     }
-    if(!props.validity && props.id === "pass"){
+    if(props.id === "pass"){
         message = "Chosen password does not have at least 6 characters!"
     }
-    if(!props.validity && props.id === "passConf"){
+    if(props.id === "passConf"){
         message = "Passwords are not identical!"
     }
 
@@ -30,7 +30,7 @@ const paramReducer = (state, action) => {
         return {
             ...state,
             enteredMail: action.value,
-            validMail: action.data.filter(acc => acc.mail === action.value).length === 0 && action.value.includes("@")
+            validMail: action.data.filter(acc => acc.mail === action.value).length === 0 && action.value.includes("@") && action.value.trim().length > 0
         };
     }
     if (action.type === "PASSWORD_&_VALIDATE") {
@@ -38,7 +38,7 @@ const paramReducer = (state, action) => {
         return {
             ...state,
             enteredPassword: action.value,
-            validPass: action.value.trim().length > 6
+            validPass: action.value.trim().length > 6 
         }
     }
     if (action.type === "ACCNAME_&_VALIDATE") {
@@ -107,7 +107,7 @@ const SignIn = (props) => {
         console.log(loginParams.validMail, loginParams.validPass, loginParams.validName, loginParams.validConfPass)
 
         if (loginParams.validMail && loginParams.validPass && loginParams.validName && loginParams.validConfPass) {
-
+            //TODO: loginParams.enetered változók ellenőrzése (üres v nem)
             ctx.addAccount({
                 name: loginParams.enteredName,
                 mail: loginParams.enteredMail,
@@ -116,33 +116,34 @@ const SignIn = (props) => {
             props.onClose()
         }
         else {
+            console.log(loginParams.validMail, loginParams.validPass, loginParams.validName, loginParams.validConfPass)
             nameRef.current.value = ""
             mailRef.current.value = ""
             passRef.current.value = ""
             confRef.current.value = ""
 
-            alert("Name: at least 1 character\nE-mail: contains '@' character\nPassword: minimum 6 character\n")
-            //ha talál egyező mail címet akkor validMail = false (+1 if a reducer-be type: MODIFY_"valid(megfelelő változó név)")
-            //ha pass+mail páros már létezik
-            // ha nincs mail && ha nincs mail+pass páros ? feltöltés : 
-            //ULTIMATE: reducerbe beleírni a dataBase-ben keresést is (mail check in dataBase + new typeIf: mail+pass check in submit)
+            setInputRefresh(true)
 
-            //useEffect minden eshetőségre új változókkal + refek használata hiba kiírásra, input validity = új változók
+            // alert("Name: at least 1 character\nE-mail: contains '@' character\nPassword: minimum 6 character\n")
         }
     }
 
-
+    useEffect(() => {
+        setTimeout(() => {
+            setInputRefresh(false)
+        }, 5000)
+    },[inputRefresh])
 
     return (
         <Modal onClose={props.onClose}>
             <form onSubmit={submitHandler}>
-                <ErrorMessage validity={loginParams.validName} id="name"/>
+                {inputRefresh && !loginParams.validName ? <ErrorMessage id="name"/> : ""}
                 <Input ref={nameRef} input={{ type: "text", id: "name", placeholder: "Account name", changeEvent: true, validity: loginParams.validName }} onChange={nameHandler}>Name:</Input>
-                <ErrorMessage validity={loginParams.validMail} id="mail"/>
+                {inputRefresh && !loginParams.validMail ? <ErrorMessage id="mail"/> : ""}
                 <Input ref={mailRef} input={{ type: "email", id: "mail", placeholder: "E-mail", changeEvent: true, validity: loginParams.validMail }} onChange={mailHandler}>E-mail:</Input>
-                <ErrorMessage validity={loginParams.validPass} id="pass"/>
+                {inputRefresh && !loginParams.validPass ? <ErrorMessage id="pass"/> : ""}
                 <Input ref={passRef} input={{ type: "password", id: "pass", placeholder: "Password", changeEvent: true, validity: loginParams.validPass }} onChange={passwordHandler}>Password:</Input>
-                <ErrorMessage validity={loginParams.validConfPass} id="passConf"/>
+                {inputRefresh && !loginParams.validConfPass ? <ErrorMessage id="passConf"/> : ""}
                 <Input ref={confRef} input={{ type: "password", id: "passConf", placeholder: "Confirm Password", changeEvent: true, validity: loginParams.validConfPass }} onChange={passwordConfHandler}>Confirm Password:</Input>
                 
                 <div className={buttonClasses.buttonContainer}><button className={buttonClasses.button} type="submit">Register</button></div>
