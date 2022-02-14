@@ -1,0 +1,13 @@
+.input {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px auto;
+}
+
+.invalid{
+    box-shadow:none;
+    border-color:red;
+    background-color: rgb(255, 161, 161);
+}
+

@@ -1,0 +1,35 @@
+.inputBar {
+    width: 250px;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    /* border: 2px solid red; */
+    border-radius: 10px;
+    border-style: none;
+    background-color: rgba(199, 199, 199, 0.22)
+}
+
+.error{
+    background-color: rgb(255, 101, 101);
+}
+
+.inputBar:focus{
+    border-style: none;
+}
+
+.inputContainer {
+    width: 400px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;  
+    }
+
+.label {
+    color:#ffd900
+}
+
+.errorMessage {
+    position: absolute;
+    top: 10px;
+}
