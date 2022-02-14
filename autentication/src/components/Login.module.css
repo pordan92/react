@@ -1,4 +1,5 @@
 .button {
+    width: 80px;
     border-style: none;
     color:#ffd900;
     padding: 5px 15px;
@@ -15,6 +16,7 @@
 }
 
 .buttonContainer {
+    margin-top: 10px;
     width: 400px;
     display: flex;
     align-content: center;
