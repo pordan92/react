@@ -9,8 +9,6 @@ import AccountContext from "../storage/dataBase";
 
 const AutenticationPage = (props) => {
     const [signInAppear, setSignInAppear] = useState(false)
-    
-    // const [userName, setUserName] = useState("")
 
     const ctx = useContext(AccountContext)
     const closingHandler = () => {
@@ -25,15 +23,10 @@ const AutenticationPage = (props) => {
         props.onComp()
     }
 
-    // useEffect(() => {
-    //     setUserName(ctx.currentAccount.name)
-    // })
-
     return(
     <div className={classes.background}>
       {<LogIn onChange={changeHandler} onSignIn={signInApperaHandler}/>}
       {signInAppear && <SignIn onClose={closingHandler}/>}
-      {/* {logInCompleted && <h1>Hello {userName}</h1>} */}
     </div>
   );
 }

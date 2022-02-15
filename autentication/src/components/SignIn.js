@@ -38,7 +38,6 @@ const paramReducer = (state, action) => {
         };
     }
     if (action.type === "PASSWORD_&_VALIDATE") {
-        //TODO: regex for validPass
         return {
             ...state,
             enteredPassword: action.value,
@@ -122,14 +121,7 @@ const SignIn = (props) => {
         else {
             console.log(loginParams.validMail, loginParams.validPass, loginParams.validName, loginParams.validConfPass)
             setInputRefresh(true)
-            // nameRef.current.value = ""
-            // mailRef.current.value = ""
-            // passRef.current.value = ""
-            // confRef.current.value = ""
-
-
-            // alert("Name: at least 1 character\nE-mail: contains '@' character\nPassword: minimum 6 character\n")
-        }
+            }
     }
 
     useEffect(() => {
