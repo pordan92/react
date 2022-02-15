@@ -8,9 +8,13 @@ import buttonClasses from "./Login.module.css"
 const ErrorMessage = (props) => {
     let message = ""
     if(props.id === "name"){
+        props.sintact.trim().length === 0 ? 
+        message = "Name has to be at least 1 character!" :
         message = "Chosen name is already taken!"
     }
     if(props.id === "mail"){
+        !props.sintact.includes("@", ".") ?
+        message = "E-mail address has to contain '@' and '.' characters!" :
         message = "Chosen e-mail is already taken!"
     }
     if(props.id === "pass"){
@@ -117,33 +121,34 @@ const SignIn = (props) => {
         }
         else {
             console.log(loginParams.validMail, loginParams.validPass, loginParams.validName, loginParams.validConfPass)
-            nameRef.current.value = ""
-            mailRef.current.value = ""
-            passRef.current.value = ""
-            confRef.current.value = ""
-
             setInputRefresh(true)
+            // nameRef.current.value = ""
+            // mailRef.current.value = ""
+            // passRef.current.value = ""
+            // confRef.current.value = ""
+
 
             // alert("Name: at least 1 character\nE-mail: contains '@' character\nPassword: minimum 6 character\n")
         }
     }
 
     useEffect(() => {
-        setTimeout(() => {
+        const timer = setTimeout(() => {
             setInputRefresh(false)
-        }, 5000)
+        }, 4000)
+        return () => clearTimeout(timer)
     },[inputRefresh])
 
     return (
         <Modal onClose={props.onClose}>
             <form onSubmit={submitHandler}>
-                {inputRefresh && !loginParams.validName ? <ErrorMessage id="name"/> : ""}
+                {inputRefresh && !loginParams.validName ? <ErrorMessage id="name" sintact={nameRef.current.value}/> : ""}
                 <Input ref={nameRef} input={{ type: "text", id: "name", placeholder: "Account name", changeEvent: true, validity: loginParams.validName }} onChange={nameHandler}>Name:</Input>
-                {inputRefresh && !loginParams.validMail ? <ErrorMessage id="mail"/> : ""}
+                {inputRefresh && !loginParams.validMail ? <ErrorMessage id="mail" sintact={mailRef.current.value}/> : ""}
                 <Input ref={mailRef} input={{ type: "email", id: "mail", placeholder: "E-mail", changeEvent: true, validity: loginParams.validMail }} onChange={mailHandler}>E-mail:</Input>
-                {inputRefresh && !loginParams.validPass ? <ErrorMessage id="pass"/> : ""}
+                {inputRefresh && !loginParams.validPass ? <ErrorMessage id="pass" sintact={passRef.current.value}/> : ""}
                 <Input ref={passRef} input={{ type: "password", id: "pass", placeholder: "Password", changeEvent: true, validity: loginParams.validPass }} onChange={passwordHandler}>Password:</Input>
-                {inputRefresh && !loginParams.validConfPass ? <ErrorMessage id="passConf"/> : ""}
+                {inputRefresh && !loginParams.validConfPass ? <ErrorMessage id="passConf" sintact={confRef.current.value}/> : ""}
                 <Input ref={confRef} input={{ type: "password", id: "passConf", placeholder: "Confirm Password", changeEvent: true, validity: loginParams.validConfPass }} onChange={passwordConfHandler}>Confirm Password:</Input>
                 
                 <div className={buttonClasses.buttonContainer}><button className={buttonClasses.button} type="submit">Register</button></div>
